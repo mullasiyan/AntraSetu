@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#050B16] text-slate-100 font-sans selection:bg-cyan-500/20 selection:text-cyan-300;
+  }
+
+  /* Custom scientific operations scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #091325;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1B315B;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #264377;
+  }
+}
+
+.radar-sweep {
+  background: conic-gradient(from 0deg, rgba(0, 229, 255, 0.15) 0deg, rgba(0, 229, 255, 0) 60deg);
+  animation: radar-spin 4s linear infinite;
+}
+
+@keyframes radar-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pulse-critical {
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse-crit 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes pulse-crit {
+  to {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+.pulse-nominal {
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+  animation: pulse-nom 2.5s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes pulse-nom {
+  to {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+}
