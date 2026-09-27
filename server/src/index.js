@@ -21,12 +21,27 @@ import commsRoutes from './routes/comms.routes.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
+
+const allowedOrigins = new Set([
+  'https://antrasetu.vercel.app',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173'
+]);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    callback(null, !origin || allowedOrigins.has(origin));
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan('dev'));
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -41,23 +56,16 @@ app.use('/api/personnel', personnelRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/comms', commsRoutes);
 
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ONLINE',
-    service: 'AntarSetu Polar Operations API',
-    polar_time_utc: new Date().toISOString(),
-    stations_monitored: ['BHARATI', 'MAITRI', 'DAKSHIN_GANGOTRI']
-  });
-});
-
 // Central Error Handler
 app.use(errorHandler);
 
 // Initialize DB and start server
 async function bootstrap() {
   try {
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET environment variable is required.');
+    }
+
     await initDatabase();
     
     // Start Antarctic dynamic sensor simulation engine

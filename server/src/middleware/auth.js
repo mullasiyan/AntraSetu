@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { db } from '../db/db.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'antarsetu_polar_secret_key_2026_scientific_mission';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
